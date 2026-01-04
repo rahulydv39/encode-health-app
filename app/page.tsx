@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { motion, AnimatePresence, useDragControls } from "framer-motion";
-import { Scan, AlertTriangle, CheckCircle, Info, Loader2, ArrowRight, History, Trash2, Zap, X, Image as ImageIcon, HelpCircle, Upload, Barcode, ChevronRight, ChevronLeft, BrainCircuit, ShieldCheck, FileText, Sparkles, Scale } from "lucide-react";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
+import { Scan, AlertTriangle, CheckCircle, Info, Loader2, ArrowRight, History, Trash2, Zap, X, Image as ImageIcon, HelpCircle, Upload, Barcode, ChevronRight, BrainCircuit, ShieldCheck, FileText, Sparkles, Scale } from "lucide-react";
 
-
+// --------------------------------------------------------
+// 🔧 DEMO SCENARIOS (Video Sequence)
+// --------------------------------------------------------
 const DEMO_SEQUENCE = [
   {
     id: "demo_1",
@@ -59,7 +61,7 @@ const DEMO_SEQUENCE = [
   }
 ];
 
-
+// --- COMPONENT: Scanning Animation ---
 const ScanningDemoAnimation = () => {
   return (
     <div className="relative w-24 h-24 mx-auto mb-4 flex items-center justify-center">
@@ -90,7 +92,7 @@ const ScanningDemoAnimation = () => {
   );
 };
 
-
+// --- COMPONENT 1: WELCOME POPUP ---
 const WelcomePopup = ({ onClose }: { onClose: () => void }) => {
   return (
     <motion.div
@@ -106,7 +108,6 @@ const WelcomePopup = ({ onClose }: { onClose: () => void }) => {
 
         {/* LEFT COLUMN: Hero Content */}
         <div className="flex-1 relative z-10 flex flex-col justify-center py-4">
-          {/* Logo */}
           <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-yellow-500/20">
             <Sparkles className="w-8 h-8 text-white" fill="white" />
           </div>
@@ -128,11 +129,9 @@ const WelcomePopup = ({ onClose }: { onClose: () => void }) => {
           </button>
         </div>
 
-
+        {/* RIGHT COLUMN: Feature Card */}
         <div className="flex-1 bg-[#1a1a1a] rounded-[2rem] p-8 flex flex-col justify-between border border-neutral-800 relative">
-
           <div className="space-y-8">
-            {/* Feature 1 */}
             <div className="flex gap-5">
               <div className="mt-1 bg-blue-500/10 p-3 rounded-xl h-fit"><BrainCircuit size={24} className="text-blue-400" /></div>
               <div>
@@ -143,7 +142,6 @@ const WelcomePopup = ({ onClose }: { onClose: () => void }) => {
               </div>
             </div>
 
-            {/* Feature 2 */}
             <div className="flex gap-5">
               <div className="mt-1 bg-green-500/10 p-3 rounded-xl h-fit"><ShieldCheck size={24} className="text-green-400" /></div>
               <div>
@@ -153,7 +151,6 @@ const WelcomePopup = ({ onClose }: { onClose: () => void }) => {
                 </p>
               </div>
             </div>
-
 
             <div className="flex gap-5">
               <div className="mt-1 bg-purple-500/10 p-3 rounded-xl h-fit"><Scale size={24} className="text-purple-400" /></div>
@@ -169,7 +166,7 @@ const WelcomePopup = ({ onClose }: { onClose: () => void }) => {
           <div className="mt-8 pt-8 border-t border-neutral-800">
             <p className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold mb-3">Powered by</p>
             <div className="flex gap-4 opacity-60">
-              <span className="text-xs font-bold text-white">Gemini 2.5 flash</span>
+              <span className="text-xs font-bold text-white">Gemini 1.5 Pro</span>
               <span className="text-xs text-neutral-600">•</span>
               <span className="text-xs font-bold text-white">n8n</span>
               <span className="text-xs text-neutral-600">•</span>
@@ -182,12 +179,13 @@ const WelcomePopup = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-
+// --- COMPONENT 2: HELP POPUP ---
 const HelpPopup = ({ onClose }: { onClose: () => void }) => {
   const [slide, setSlide] = useState(0);
 
-
-  const handleDragEnd = (event: any, info: any) => {
+  // Smooth Swipe Handler
+  // Fixed type issue by importing PanInfo from framer-motion
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const threshold = 50;
     if (info.offset.x < -threshold) {
       setSlide(1);
@@ -208,7 +206,7 @@ const HelpPopup = ({ onClose }: { onClose: () => void }) => {
             <X size={20} />
           </button>
 
-
+          {/* SLIDING CONTAINER */}
           <motion.div
             className="flex w-[200%] h-full cursor-grab active:cursor-grabbing"
             animate={{ x: slide === 0 ? "0%" : "-50%" }}
@@ -218,29 +216,22 @@ const HelpPopup = ({ onClose }: { onClose: () => void }) => {
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
           >
-
+            {/* SLIDE 1: HOW IT WORKS */}
             <div className="w-1/2 h-full p-8 flex flex-col items-center justify-center shrink-0 border-r border-neutral-800/50">
               <div className="mb-6 scale-110"><ScanningDemoAnimation /></div>
               <h3 className="text-white font-bold text-xl mb-2">How it Works</h3>
               <div className="space-y-3 mt-2">
                 <p className="text-neutral-400 text-sm flex items-center gap-2">
                   <span className="bg-yellow-400/20 text-yellow-400 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                  Point camera at barcode / Upload image
+                  Point camera at barcode
                 </p>
                 <p className="text-neutral-400 text-sm flex items-center gap-2">
                   <span className="bg-yellow-400/20 text-yellow-400 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                  AI will give reasons about ingredients
+                  AI reasons about ingredients
                 </p>
                 <p className="text-neutral-400 text-sm flex items-center gap-2">
                   <span className="bg-yellow-400/20 text-yellow-400 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">3</span>
                   Get a clear "Risk Score"
-                </p>
-                <p className="text-neutral-400 text-sm flex items-center gap-2">
-                  <span className="bg-yellow-400/20 text-red-700 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">Rules   </span>
-                  Green Card - Safe to consume / Harmless.
-                  <br />
-                  Red Card - Not Safe to consume / Harmful.
-
                 </p>
               </div>
               <p className="text-neutral-600 text-[10px] mt-10 font-mono flex items-center gap-1 uppercase tracking-widest">
@@ -248,7 +239,7 @@ const HelpPopup = ({ onClose }: { onClose: () => void }) => {
               </p>
             </div>
 
-
+            {/* SLIDE 2: ABOUT APP */}
             <div className="w-1/2 h-full p-8 flex flex-col items-center justify-center shrink-0 bg-neutral-800/20">
               <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6">
                 <Info size={32} className="text-blue-400" />
@@ -259,7 +250,7 @@ const HelpPopup = ({ onClose }: { onClose: () => void }) => {
                 Standard apps are "Lookup Tools" (input &rarr; database row).
               </p>
               <p className="text-neutral-400 text-center text-xs leading-relaxed mb-8 px-2">
-                Encode AI is an <strong>Agentic System</strong>. It understands context (e.g., "Is this safe?") without you filling out long profile forms. It acts as a nutritional firewall between you and the shelf.
+                Encode AI is an <strong>Agentic System</strong>. It understands context (e.g., &quot;Is this safe?&quot;) without you filling out long profile forms. It acts as a nutritional firewall between you and the shelf.
               </p>
 
               <button onClick={onClose} className="px-8 py-3 bg-neutral-800 border border-neutral-700 text-white font-medium rounded-full hover:bg-neutral-700 transition-colors text-sm">
@@ -268,7 +259,7 @@ const HelpPopup = ({ onClose }: { onClose: () => void }) => {
             </div>
           </motion.div>
 
-
+          {/* DOT INDICATORS */}
           <div className="absolute bottom-6 left-0 w-full flex items-center justify-center gap-2 z-20 pointer-events-none">
             <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${slide === 0 ? 'bg-yellow-400 w-4' : 'bg-neutral-700'}`} />
             <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${slide === 1 ? 'bg-yellow-400 w-4' : 'bg-neutral-700'}`} />
@@ -342,7 +333,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col items-center justify-start p-6 relative overflow-x-hidden font-sans">
 
-
+      {/* POPUPS */}
       <AnimatePresence>
         {showWelcome && <WelcomePopup onClose={() => setShowWelcome(false)} />}
         {showHelp && <HelpPopup onClose={() => setShowHelp(false)} />}
@@ -350,7 +341,7 @@ export default function Home() {
 
       <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-yellow-500/10 via-amber-500/5 to-transparent pointer-events-none" />
 
-
+      {/* Header */}
       <header className="w-full max-w-md flex justify-between items-center z-10 mb-8 pt-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/20">
@@ -363,7 +354,7 @@ export default function Home() {
         </button>
       </header>
 
-
+      {/* --- STATE 1: IDLE --- */}
       <AnimatePresence mode="wait">
         {status === "idle" && (
           <motion.div
@@ -392,7 +383,7 @@ export default function Home() {
           </motion.div>
         )}
 
-
+        {/* --- STATE 2: SCANNING --- */}
         {status === "scanning" && (
           <motion.div key="scanning" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center">
             <div className="relative w-full h-full max-w-md mx-auto overflow-hidden bg-neutral-900">
@@ -411,7 +402,7 @@ export default function Home() {
           </motion.div>
         )}
 
-
+        {/* --- STATE 2.5: UPLOADING --- */}
         {status === "uploading" && (
           <motion.div key="uploading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center">
             <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 1.5 }} className="mb-6">
@@ -421,7 +412,7 @@ export default function Home() {
           </motion.div>
         )}
 
-
+        {/* --- STATE 3: ANALYZING --- */}
         {status === "analyzing" && (
           <motion.div key="analyzing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col items-center justify-center min-h-[50vh]">
             <div className="relative">
@@ -432,20 +423,20 @@ export default function Home() {
           </motion.div>
         )}
 
-
+        {/* --- STATE 4: RESULT --- */}
         {status === "result" && data && (
           <motion.div key="result" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md pb-8">
             <div className={`p-7 rounded-[2.5rem] border relative overflow-hidden transition-colors duration-500 shadow-2xl ${data.ui_component === 'alert_card' ? 'bg-gradient-to-br from-red-950/90 to-neutral-950 border-red-500/30' :
-              data.ui_component === 'info_card' ? 'bg-gradient-to-br from-blue-950/90 to-neutral-950 border-blue-500/30' :
-                'bg-gradient-to-br from-green-950/90 to-neutral-950 border-green-500/30'}`}>
+                data.ui_component === 'info_card' ? 'bg-gradient-to-br from-blue-950/90 to-neutral-950 border-blue-500/30' :
+                  'bg-gradient-to-br from-green-950/90 to-neutral-950 border-green-500/30'}`}>
 
               <div className="flex justify-between items-start mb-6">
                 <div className={`p-3.5 rounded-2xl backdrop-blur-md ${data.ui_component === 'alert_card' ? 'bg-red-500/10 text-red-500' :
-                  data.ui_component === 'info_card' ? 'bg-blue-500/10 text-blue-500' : 'bg-green-500/10 text-green-500'}`}>
+                    data.ui_component === 'info_card' ? 'bg-blue-500/10 text-blue-500' : 'bg-green-500/10 text-green-500'}`}>
                   {data.ui_component === 'alert_card' ? <AlertTriangle size={32} /> : data.ui_component === 'info_card' ? <Info size={32} /> : <CheckCircle size={32} />}
                 </div>
                 <span className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wider border ${data.ui_component === 'alert_card' ? 'border-red-500/30 text-red-300 bg-red-950/50' :
-                  data.ui_component === 'info_card' ? 'border-blue-500/30 text-blue-300 bg-blue-950/50' : 'border-green-500/30 text-green-300 bg-green-950/50'}`}>
+                    data.ui_component === 'info_card' ? 'border-blue-500/30 text-blue-300 bg-blue-950/50' : 'border-green-500/30 text-green-300 bg-green-950/50'}`}>
                   {data.risk_level?.toUpperCase()}
                 </span>
               </div>
@@ -470,7 +461,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-
+      {/* --- HISTORY SECTION (Grid with REAL IMAGES) --- */}
       {status === "idle" && (
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="w-full max-w-md mt-12 mb-10">
           <div className="flex items-center justify-between mb-5 px-2">
@@ -494,18 +485,18 @@ export default function Home() {
                 history.map((item) => (
                   <motion.div key={item.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="relative bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden aspect-square group cursor-pointer shadow-lg">
 
-
+                    {/* Product Image Background */}
                     <img src={item.image} alt={item.product_name} className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity" />
 
-
+                    {/* Overlay Gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
 
-
+                    {/* Content Overlay */}
                     <div className="absolute inset-0 p-4 flex flex-col justify-between">
                       <div className="self-end">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md shadow-lg ${item.ui_component === 'alert_card' ? 'bg-red-500/20 text-red-400' :
-                          item.ui_component === 'info_card' ? 'bg-blue-500/20 text-blue-400' :
-                            'bg-green-500/20 text-green-400'}`}>
+                            item.ui_component === 'info_card' ? 'bg-blue-500/20 text-blue-400' :
+                              'bg-green-500/20 text-green-400'}`}>
                           {item.ui_component === 'alert_card' ? <AlertTriangle size={16} /> : item.ui_component === 'info_card' ? <Info size={16} /> : <CheckCircle size={16} />}
                         </div>
                       </div>
